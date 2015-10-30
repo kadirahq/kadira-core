@@ -27,12 +27,18 @@
   },
   "homepage": "https://github.com/kadirahq/kadira-core#readme",
   "devDependencies": {
-    "mocha": "2.x.x",
-    "chai": "3.x.x",
     "babel": "5.x.x",
-    "babel-runtime": "5.x.x",
-    "eslint": "1.7.x",
     "babel-eslint": "4.x.x",
-    "eslint-plugin-babel": "2.x.x"
+    "babel-runtime": "5.x.x",
+    "boom": "2.10.x",
+    "chai": "3.x.x",
+    "eslint": "1.7.x",
+    "eslint-plugin-babel": "2.x.x",
+    "express": "4.13.x",
+    "hapi": "11.0.x",
+    "mocha": "2.x.x"
+  },
+  "dependencies": {
+    "isomorphic-fetch": "2.2.x"
   }
 }
