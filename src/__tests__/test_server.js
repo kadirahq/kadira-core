@@ -30,3 +30,10 @@ server.route({method: 'POST', path: '/', handler: (req, reply) => {
       throw new Error('unknown request');
   }
 }});
+
+// handle ntp requests and return the timestamp in milliseconds
+// in order to test differences, return the time with 1 second lag
+server.route({method: 'GET', path: '/ntp', handler: (req, reply) => {
+  const timestamp = String(Date.now() - 1000);
+  reply(timestamp);
+}});
