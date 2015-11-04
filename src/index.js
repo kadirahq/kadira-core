@@ -30,19 +30,19 @@ export default class Kadira {
   }
 
   connect() {
-    return this._checkAuth().then(async () => {
-      await this._clock.sync();
+    return this._checkAuth()
+      .then(() => this._clock.sync())
+      .then(() => {
+        this._clockSyncInterval = setInterval(
+          () => this._clock.sync(),
+          this._options.clockSyncInterval
+        );
 
-      this._clockSyncInterval = setInterval(
-        () => this._clock.sync(),
-        this._options.clockSyncInterval
-      );
-
-      this._dataFlushInterval = setInterval(
-        () => this._flushData(),
-        this._options.dataFlushInterval
-      );
-    });
+        this._dataFlushInterval = setInterval(
+          () => this._flushData(),
+          this._options.dataFlushInterval
+        );
+      });
   }
 
   disconnect() {
