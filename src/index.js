@@ -89,8 +89,7 @@ export default class Kadira {
       headers: this._headers,
     };
 
-    return this._fetch(uri, params)
-      .then(res => res.json());
+    return this._fetch(uri, params);
   }
 
   // ping the server to check whether appId and appSecret
@@ -98,8 +97,7 @@ export default class Kadira {
   _checkAuth() {
     const uri = this._options.endpoint + '/ping';
     const params = {headers: this._headers};
-    return this._fetch(uri, params)
-      .then(res => res.text());
+    return this._fetch(uri, params);
   }
 
   // communicates with the server with http (using fetch)

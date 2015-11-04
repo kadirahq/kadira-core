@@ -31,7 +31,7 @@ hapi.route({method: '*', path: '/', handler: (req, reply) => {
   requestCount++;
   if (authenticate(req)) {
     latestData = req.payload;
-    reply({});
+    reply('');
   } else {
     reply(Boom.unauthorized());
   }
@@ -59,7 +59,7 @@ hapi.route({method: '*', path: '/simplentp/sync', handler: (req, reply) => {
 hapi.route({method: '*', path: '/ping', handler: (req, reply) => {
   requestCount++;
   if (authenticate(req)) {
-    reply({});
+    reply('');
   } else {
     reply(Boom.unauthorized());
   }
