@@ -17,6 +17,7 @@ export default class Kadira {
     this._options = Object.assign({}, DEFAULTS, _options);
     this._payload = {host: this._options.hostname};
     this._headers = {
+      'content-type': 'application/json',
       'kadira-app-id': this._options.appId,
       'kadira-app-secret': this._options.appSecret,
     };

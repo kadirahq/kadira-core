@@ -21,6 +21,7 @@ export default {
 
 function authenticate(req) {
   return (
+    req.headers['content-type'] === 'application/json' &&
     req.headers['kadira-app-id'] === 'test-app-id' &&
     req.headers['kadira-app-secret'] === 'test-app-secret'
   );
