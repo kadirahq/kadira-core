@@ -60,11 +60,21 @@ describe('kadira', function () {
       await kadira.connect();
       kadira.disconnect();
 
-      kadira.addData('test', {foo: 'bar'});
+      kadira.addData('test1', {a: 'b'});
+      kadira.addData('test1', {c: 'd'});
+      kadira.addData('test2', {e: 'f'});
       await kadira._flushData();
       assert.deepEqual(server.getData(), {
         host: kadira._options.hostname,
-        test: [ {foo: 'bar'} ],
+        test1: [ {a: 'b'}, {c: 'd'} ],
+        test2: [ {e: 'f'} ],
+      });
+
+      kadira.addData('test3', {g: 'h'});
+      await kadira._flushData();
+      assert.deepEqual(server.getData(), {
+        host: kadira._options.hostname,
+        test3: [ {g: 'h'} ],
       });
     });
   });
