@@ -6,6 +6,12 @@
   "options": {
     "mocha": "--require scripts/mocha-bootload src/**/__tests__/**/*.js"
   },
+  "babel": {
+    "optional": [
+      "runtime",
+      "es7.asyncFunctions"
+    ]
+  },
   "scripts": {
     "make": "./scripts/prepublish.sh",
     "lint": "./node_modules/.bin/eslint ./src",
@@ -39,6 +45,7 @@
     "mocha": "2.x.x"
   },
   "dependencies": {
+    "babel-runtime": "^6.0.14",
     "isomorphic-fetch": "2.2.x"
   }
 }
