@@ -35,7 +35,6 @@
   "devDependencies": {
     "babel": "5.x.x",
     "babel-eslint": "4.x.x",
-    "bluebird": "3.0.x",
     "boom": "2.10.x",
     "chai": "3.x.x",
     "eslint": "1.7.x",
@@ -45,6 +44,7 @@
   },
   "dependencies": {
     "babel-runtime": "6.0.x",
+    "bluebird": "3.0.5",
     "isomorphic-fetch": "2.2.x"
   }
 }
