@@ -51,6 +51,7 @@
     "babel-runtime": "6.x.x",
     "debug": "2.x.x",
     "isomorphic-fetch": "2.2.x",
-    "request": "2.x.x"
+    "request": "2.x.x",
+    "bluebird": "3.x.x"
   }
 }
