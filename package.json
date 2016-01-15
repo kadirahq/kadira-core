@@ -1,6 +1,6 @@
 {
   "name": "kadira-core",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Kadira Core API",
   "main": "./dist/",
   "options": {
