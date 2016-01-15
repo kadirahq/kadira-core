@@ -1,8 +1,14 @@
 # Kadira
 
-The `kadira-core` module handles all common tasks related to data collection
-and delivery. This includes:
+Handle core functionalities of Kadira such as
 
- - User/App authentication
- - Client side aggregation
- - Periodically send data
+* Transport
+* NTP Time syncing
+
+### Kadira Transport Debugging
+
+You can debug what's happening inside the kadira transport by exposing following environment variable:
+
+```
+export `DEBUG=kadira-core:transport`
+```

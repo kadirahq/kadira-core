@@ -1,4 +1,5 @@
 import Promise from 'bluebird';
+import {inherits} from 'util';
 
 // default options
 const options = {
@@ -6,21 +7,24 @@ const options = {
   timeFunction: i => 100 * Math.pow(i, 2),
 };
 
+// XXX: We we need to use instanceof with these error classes.
+// So, we can't use Babel's version of extends for that.
+// It's doesn't support that. See: http://stackoverflow.com/a/33877501/457224
+// That's why we are doing it in the old fashion way.
+
 // reject the promise with this error when run out of retry attmpts.
-export const MaxRetryError = class extends Error {
-  constructor(message) {
-    super(message);
-    this.message = message;
-  }
+export const MaxRetryError = function (message) {
+  Error.call(this, message);
+  this.message = message;
 };
+inherits(MaxRetryError, Error);
 
 // reject the promise with this error (in promiser) to stop retrying.
-export const ByPassRetryError = class extends Error {
-  constructor(message) {
-    super(message);
-    this.message = message;
-  }
+export const ByPassRetryError = function (message) {
+  Error.call(this, message);
+  this.message = message;
 };
+inherits(MaxRetryError, Error);
 
 // retry([options], fn)
 // retry module takes a `promiser` function as the main argument.

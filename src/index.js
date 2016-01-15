@@ -2,6 +2,9 @@ import fetch from 'isomorphic-fetch';
 import Clock from './clock.js';
 import retry from './retry.js';
 import {ByPassRetryError} from './retry.js';
+import debug from 'debug';
+
+const logger = debug('kadira-core:transport');
 
 const DEFAULTS = {
   appId: '',
@@ -29,6 +32,7 @@ export default class Kadira {
   }
 
   connect() {
+    logger('connecting with', this._options);
     return this._checkAuth()
       .then(() => this._clock.sync())
       .then(() => {
@@ -40,10 +44,12 @@ export default class Kadira {
   }
 
   disconnect() {
+    logger('disconnect');
     clearInterval(this._clockSyncInterval);
   }
 
   updateJob(id, diff) {
+    logger('update job', id);
     const data = {action: 'set', params: {}};
     Object.assign(data.params, diff, {id});
 
@@ -74,6 +80,7 @@ export default class Kadira {
       headers: this._headers,
     };
 
+    logger(`send data - ${body.substr(0, 50)}...`);
     return this._send(uri, params);
   }
 
@@ -95,14 +102,19 @@ export default class Kadira {
         }
 
         if (res.status === 401) {
+          logger('Error: Unauthorized');
           throw new ByPassRetryError('Unauthorized');
         }
 
         if (res.status >= 400 && res.status < 500) {
-          throw new ByPassRetryError(`Agent Error: ${res.status}`);
+          const message = `Agent Error: ${res.status}`;
+          logger(`Error: ${message}`);
+          throw new ByPassRetryError(message);
         }
 
-        throw new Error(`Request failed: ${res.status}`);
+        const message = `Request failed: ${res.status}`;
+        logger('Error: ${message}');
+        throw new Error(message);
       });
     });
   }
