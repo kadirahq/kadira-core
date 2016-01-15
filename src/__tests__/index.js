@@ -2,7 +2,7 @@ import assert from 'assert';
 import {describe, it, beforeEach, afterEach} from 'mocha';
 import server from './_server.js';
 import Kadira from '../index.js';
-import {ERR_ENDRETRY} from '../retry.js';
+import {ByPassRetryError} from '../retry.js';
 
 describe('kadira', function () {
   const endpoint = 'http://localhost:8000';
@@ -31,7 +31,7 @@ describe('kadira', function () {
       try {
         await kadira.connect();
       } catch (e) {
-        assert.equal(e, ERR_ENDRETRY);
+        assert.equal(e instanceof ByPassRetryError, true);
         erred = true;
       }
 

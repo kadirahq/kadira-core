@@ -1,28 +1,27 @@
 import assert from 'assert';
 import {describe, it} from 'mocha';
-import Counter from './_counter.js';
 import retry from '../retry.js';
-import {ERR_MAXRETRY, ERR_ENDRETRY} from '../retry.js';
+import {ByPassRetryError, MaxRetryError} from '../retry.js';
 
 describe('retry', function () {
   it('should retry N times', async function () {
     this.timeout(6e4);
     let erred = false;
     let result;
-
-    // counter will not reach zero
-    const counter = new Counter(5);
+    const err = new Error('Some Error');
 
     try {
-      result = await retry(() => counter.decrease());
+      result = await retry(() => {
+        return new Promise((_, r) => r(err));
+      });
     } catch (e) {
-      assert.equal(e, ERR_MAXRETRY);
+      assert.equal(e instanceof MaxRetryError, true);
+      assert.equal(e.message, `Reached maximum retry limit for ${err.message}`);
       erred = true;
     }
 
     assert(erred);
     assert.equal(result, undefined);
-    assert.equal(counter.count, 1);
   });
 
   it('should stop on success', async function () {
@@ -30,19 +29,14 @@ describe('retry', function () {
     let erred = false;
     let result;
 
-    // counter will reach 0 and stop
-    const counter = new Counter(2);
-
     try {
-      result = await retry(() => counter.decrease());
+      result = await retry(() => Promise.resolve('result'));
     } catch (e) {
-      assert.equal(e, ERR_MAXRETRY);
       erred = true;
     }
 
     assert(!erred);
     assert.equal(result, 'result');
-    assert.equal(counter.count, 0);
   });
 
   it('should stop on endretry', async function () {
@@ -50,18 +44,17 @@ describe('retry', function () {
     let erred = false;
     let result;
 
-    // counter will reach 10 and stop
-    const counter = new Counter(12);
-
     try {
-      result = await retry(() => counter.decrease());
+      result = await retry(() => {
+        return new Promise((_, reject) => reject(new ByPassRetryError('ERR')));
+      });
     } catch (e) {
-      assert.equal(e, ERR_ENDRETRY);
+      assert.equal(e instanceof ByPassRetryError, true);
+      assert.equal(e.message, 'ERR');
       erred = true;
     }
 
     assert(erred);
     assert.equal(result, undefined);
-    assert.equal(counter.count, 10);
   });
 });

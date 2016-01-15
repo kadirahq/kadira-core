@@ -7,10 +7,20 @@ const options = {
 };
 
 // reject the promise with this error when run out of retry attmpts.
-export const ERR_MAXRETRY = new Error('reached maximum retry limit');
+export const MaxRetryError = class extends Error {
+  constructor(message) {
+    super(message);
+    this.message = message;
+  }
+};
 
 // reject the promise with this error (in promiser) to stop retrying.
-export const ERR_ENDRETRY = new Error('use this error to stop retry');
+export const ByPassRetryError = class extends Error {
+  constructor(message) {
+    super(message);
+    this.message = message;
+  }
+};
 
 // retry([options], fn)
 // retry module takes a `promiser` function as the main argument.
@@ -27,17 +37,18 @@ export default function retry(promiser) {
     let count = 0;
 
     const onError = function (err) {
-      if (err === ERR_ENDRETRY) {
-        reject(ERR_ENDRETRY);
+      if (err instanceof ByPassRetryError) {
+        reject(err);
       } else {
-        attempt();
+        attempt(err);
       }
     };
 
-    const attempt = async function () {
+    const attempt = async function (lastError) {
       if (++count > options.maxRetries) {
-        reject(ERR_MAXRETRY);
-        return;
+        const message = `Reached maximum retry limit for ${lastError.message}`;
+        const err = new MaxRetryError(message);
+        return reject(err);
       }
 
       // stop a few milliseconds between retries
@@ -45,8 +56,7 @@ export default function retry(promiser) {
       await Promise.delay(millis);
 
       promiser()
-        .then(resolve)
-        .catch(onError);
+        .then(resolve, onError);
     };
 
     // start!

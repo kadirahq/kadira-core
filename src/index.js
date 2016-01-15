@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import Clock from './clock.js';
 import retry from './retry.js';
-import {ERR_ENDRETRY} from './retry.js';
+import {ByPassRetryError} from './retry.js';
 
 const DEFAULTS = {
   appId: '',
@@ -111,10 +111,11 @@ export default class Kadira {
         }
 
         if (res.status >= 400 && res.status < 500) {
-          throw ERR_ENDRETRY;
+          const err = new ByPassRetryError(`Agent Error: ${res.status}`);
+          throw err;
         }
 
-        throw new Error('request failed: ' + res.status);
+        throw new Error(`Request failed: ${res.status}`);
       });
     });
   }
