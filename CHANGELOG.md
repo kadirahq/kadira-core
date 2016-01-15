@@ -1,5 +1,9 @@
 # Change Log
 
+### v1.3.0
+
+* Add getJob() api
+
 ### v1.2.0
 
 * Remove bluebird and just use babel's Promise
