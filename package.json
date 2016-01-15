@@ -1,8 +1,8 @@
 {
   "name": "kadira-core",
   "version": "1.0.0",
-  "description": "Handle authentication, metric collection and delivery",
-  "main": "./build/",
+  "description": "Kadira Core API",
+  "main": "./dist/",
   "options": {
     "mocha": "--require scripts/mocha-bootload lib/**/__tests__/**/*.js"
   },
