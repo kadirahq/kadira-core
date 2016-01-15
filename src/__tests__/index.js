@@ -86,4 +86,25 @@ describe('kadira', function () {
       });
     });
   });
+
+  describe('_checkAuth', () => {
+    describe('with correct login info', () => {
+      it('should just return', done => {
+        const kadira = new Kadira(validOpts);
+        kadira._checkAuth().then(() => {
+          done();
+        });
+      });
+    });
+
+    describe('with bad login info', () => {
+      it('should throw an error', done => {
+        const kadira = new Kadira(invldOpts);
+        kadira._checkAuth().catch(err => {
+          assert.equal(err.message, 'Unauthorized');
+          done();
+        });
+      });
+    });
+  });
 });

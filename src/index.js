@@ -26,7 +26,6 @@ export default class Kadira {
     });
 
     this._clockSyncInterval = null;
-    this._dataFlushInterval = null;
   }
 
   connect() {
@@ -37,17 +36,11 @@ export default class Kadira {
           () => this._clock.sync(),
           this._options.clockSyncInterval
         );
-
-        this._dataFlushInterval = setInterval(
-          () => this._flushData(),
-          this._options.dataFlushInterval
-        );
       });
   }
 
   disconnect() {
     clearInterval(this._clockSyncInterval);
-    clearInterval(this._dataFlushInterval);
   }
 
   updateJob(id, diff) {
@@ -62,7 +55,7 @@ export default class Kadira {
       headers: this._headers,
     };
 
-    return this._fetch(uri, params)
+    return this._send(uri, params)
       .then(res => res.json());
   }
 
@@ -81,7 +74,7 @@ export default class Kadira {
       headers: this._headers,
     };
 
-    return this._fetch(uri, params);
+    return this._send(uri, params);
   }
 
   // ping the server to check whether appId and appSecret
@@ -89,21 +82,24 @@ export default class Kadira {
   _checkAuth() {
     const uri = this._options.endpoint + '/ping';
     const params = {headers: this._headers};
-    return this._fetch(uri, params);
+    return this._send(uri, params);
   }
 
   // communicates with the server with http (using fetch)
   // Also handles response http status codes and  retries
-  _fetch(uri, params) {
+  _send(uri, params) {
     return retry(() => {
       return fetch(uri, params).then(res => {
         if (res.status === 200) {
           return res;
         }
 
+        if (res.status === 401) {
+          throw new ByPassRetryError('Unauthorized');
+        }
+
         if (res.status >= 400 && res.status < 500) {
-          const err = new ByPassRetryError(`Agent Error: ${res.status}`);
-          throw err;
+          throw new ByPassRetryError(`Agent Error: ${res.status}`);
         }
 
         throw new Error(`Request failed: ${res.status}`);
