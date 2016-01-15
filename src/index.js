@@ -15,7 +15,6 @@ const DEFAULTS = {
 export default class Kadira {
   constructor(_options) {
     this._options = Object.assign({}, DEFAULTS, _options);
-    this._payload = {host: this._options.hostname};
     this._headers = {
       'content-type': 'application/json',
       'kadira-app-id': this._options.appId,
@@ -51,14 +50,6 @@ export default class Kadira {
     clearInterval(this._dataFlushInterval);
   }
 
-  addData(type, data) {
-    if (!this._payload[type]) {
-      this._payload[type] = [ data ];
-    } else {
-      this._payload[type].push(data);
-    }
-  }
-
   updateJob(id, diff) {
     const data = {action: 'set', params: {}};
     Object.assign(data.params, diff, {id});
@@ -75,15 +66,15 @@ export default class Kadira {
       .then(res => res.json());
   }
 
-  // send collected data to the server
-  // this method called every 10 seconds
-  _flushData() {
-    let data;
-    [ data, this._payload ] = [ this._payload, {} ];
-    data.host = this._options.hostname;
+  // send the given payload to the server
+  sendData(_payload) {
+    const payload = {
+      ..._payload,
+      host: this._options.hostname
+    };
 
     const uri = this._options.endpoint;
-    const body = JSON.stringify(data);
+    const body = JSON.stringify(payload);
     const params = {
       body,
       method: 'POST',
