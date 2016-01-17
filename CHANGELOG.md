@@ -1,5 +1,8 @@
 # Change Log
 
+### v1.3.1
+* Handle HTTP request errors. These are the errors coming from the request module.
+
 ### v1.3.0
 
 * Add getJob() api
