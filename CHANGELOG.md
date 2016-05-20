@@ -1,5 +1,9 @@
 # Change Log
 
+### v1.3.2
+
+* Remove isomorphic-fetch and implements our own isomorphism.
+
 ### v1.3.1
 * Handle HTTP request errors. These are the errors coming from the request module.
 
